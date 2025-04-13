@@ -1,6 +1,11 @@
 from flask import Flask
+from transformers import pipeline
 
+# initialize the Flask app
 app = Flask(__name__)
+
+# Load a text-generation pipeline
+generator = pipeline("text-generation", model="distilgpt2")
 
 @app.route("/")
 def home():
