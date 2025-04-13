@@ -27,11 +27,6 @@ def generate_text():
     generated_text = outputs[0]["generated_text"] # Extract the generated text
 
     return jsonify({"generated_text": generated_text})
-# ====================================
-# FEATURE BRANCH (Friend's Summarization Code)
-# ====================================
-
-from transformers import pipeline
 
 # NOTE: Summarizer loaded once at the top-level for performance.
 summarizer = pipeline("summarization", model="facebook/bart-large-cnn")
