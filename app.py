@@ -27,7 +27,32 @@ def generate_text():
     generated_text = outputs[0]["generated_text"] # Extract the generated text
 
     return jsonify({"generated_text": generated_text})
+# ====================================
+# FEATURE BRANCH (Friend's Summarization Code)
+# ====================================
 
+from transformers import pipeline
+
+# NOTE: Summarizer loaded once at the top-level for performance.
+summarizer = pipeline("summarization", model="facebook/bart-large-cnn")
+
+@app.route("/summarize_text", methods=["POST"])
+def summarize_text():
+    """
+    Endpoint to summarize a given text.
+    Expects JSON: {"text": "<long text>", "max_length": <int>, "min_length": <int>}
+    """
+    data = request.get_json()
+    text_to_summarize = data.get("text", "")
+    max_length = data.get("max_length", 60)
+    min_length = data.get("min_length", 20)
+
+    summary_list = summarizer(
+        text_to_summarize, max_length=max_length, min_length=min_length, do_sample=False
+    )
+
+    summary = summary_list[0]["summary_text"]
+    return jsonify({"summary": summary})
 if __name__ == "__main__":
     # Run Flask in debug mode
     app.run(host="0.0.0.0", port=5000, debug=True)
